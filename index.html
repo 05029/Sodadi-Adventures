@@ -15,18 +15,67 @@
 
 
 
-
-
-
-
-
-
-
-
 <!-- ==================== Cards de Passeios com Hover 3D ==================== -->
 <!-- ==================== Cards de Passeios com Hover 3D ==================== -->
 <!-- ==================== Cards de Passeios com Hover 3D ==================== -->
 <style>
+
+/* Container de vídeo de fundo */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
+}
+
+/* Overlay para melhor contraste */
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* Botão de controle de áudio */
+.audio-control {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    cursor: pointer;
+}
+
+/* Ajuste para garantir que o conteúdo fique acima do vídeo */
+.container {
+    position: relative;
+    z-index: 1;
+}
 
 
 
@@ -37,7 +86,8 @@
 
 
   body {
-            background-image: url('tarrafal.jpeg');
+               /* background-image: url('tarrafal.jpeg'); REMOVER OU COMENTAR ESTA LINHA */
+
             background-size: cover; /* Faz a imagem cobrir todo o fundo */
             background-repeat: no-repeat; /* Evita repetição */
             background-attachment: fixed; /* Fundo fixo ao rolar (opcional) */
@@ -985,7 +1035,38 @@ body {
 
 
 </head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <body>
+
+<!-- Vídeo de fundo -->
+<div class="video-background">
+    <video id="bg-video" autoplay muted loop playsinline>
+        <source src="seu-video.mp4" type="video/mp4">
+        <!-- Adicione outros formatos para melhor compatibilidade -->
+        <source src="seu-video.webm" type="video/webm">
+        Seu navegador não suporta vídeos HTML5.
+    </video>
+    <div class="video-overlay"></div>
+</div>
+
+<!-- Botão de controle de áudio -->
+<button class="audio-control" id="audio-toggle">
+    <i class="fas fa-volume-mute"></i>
+</button>
 
 <style>
 .hero-content h1 {
@@ -4457,5 +4538,53 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- FIM DA INTEGRAÇÃO COM WHATSAPP -->
 <!-- ============================================= -->
 
+
+<script>
+// Controle de áudio do vídeo de fundo
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.getElementById('bg-video');
+    const audioToggle = document.getElementById('audio-toggle');
+    
+    if (video && audioToggle) {
+        const audioIcon = audioToggle.querySelector('i');
+        
+        audioToggle.addEventListener('click', function() {
+            if (video.muted) {
+                video.muted = false;
+                audioIcon.classList.remove('fa-volume-mute');
+                audioIcon.classList.add('fa-volume-up');
+            } else {
+                video.muted = true;
+                audioIcon.classList.remove('fa-volume-up');
+                audioIcon.classList.add('fa-volume-mute');
+            }
+        });
+        
+        // Preload e play do vídeo para melhor performance
+        video.addEventListener('loadeddata', function() {
+            video.play().catch(function(error) {
+                console.log('Autoplay prevented: ', error);
+            });
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // ... todo o código existente do controle de vídeo ...
+    
+    // ADICIONE ESTE CÓDIGO AQUI:
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        const videoContainer = document.querySelector('.video-background');
+        if (videoContainer) {
+            videoContainer.innerHTML = '<div style="background-image: url(\'tarrafal.jpeg\'); background-size: cover; background-position: center; width: 100%; height: 100%;"></div>';
+        }
+    }
+});
+
+
+</script>
+
+
 </body>
 </html>
+
